@@ -1,23 +1,59 @@
-export type SingleMovieProps = {
-    title: string,
-    image: string,
-    genre: string,
-    liked: boolean,
-}
+import { Box, Button, IconButton, Paper, Typography } from "@mui/material";
+import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import { useState } from "react";
 
-export const SingleCard = ({title,image,genre,liked} : SingleMovieProps) => {
-    return(
-        <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
-            <div style={{height:'auto'}}>
-                <img src={`${image}`} style={{maxWidth:'300px', maxHeight:'600px'}}/>
-            </div>
-            <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
-                <div style={{display:'flex', width:'100%', flexDirection:'column'}}>
-                <p>{title}</p>
-                <p>{genre}</p>
-                </div>
-                <button disabled={liked} style={{height:'30%', width:'100%'}}>Like</button>
-            </div>
-            </div>
-    )
-}
+export type SingleMovieProps = {
+  id: number;
+  title: string;
+  genre: {
+    id: number;
+    genreName: string;
+  };
+  releaseDate: string;
+  rating: number;
+};
+
+export const SingleCard = ({
+  id,
+  title,
+  releaseDate,
+  genre,
+  rating,
+}: SingleMovieProps) => {
+  const [liked, setLiked] = useState(false);
+  const handleLikeChange = () => {
+    setLiked((prev) => !prev);
+  };
+  return (
+    <Box
+      component={Paper}
+      elevation={4}
+      borderRadius={"40px"}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 3,
+        gap: 3,
+        width: "15%",
+      }}
+    >
+      <Typography
+        sx={{ fontSize: "16px", fontWeight: "bold", textAlign: "center" }}
+      >
+        {title}
+      </Typography>
+      <Box sx={{ height: "auto" }}>
+        <img
+          src={`/movie-pictures/random-pic-${id}.jpg`}
+          style={{ maxWidth: "300px", maxHeight: "600px" }}
+        />
+      </Box>
+      <IconButton onClick={handleLikeChange}>
+        {!liked ? <ThumbUpOffAltIcon /> : <ThumbUpAltIcon />}
+      </IconButton>
+    </Box>
+  );
+};
