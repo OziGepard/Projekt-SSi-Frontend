@@ -8,7 +8,9 @@ export const Navbar = ({ searchShown }: { searchShown?: boolean }) => {
   const handleNavigation = (path: string) => {
     navigate(path);
   };
-  
+
+  const userRole = localStorage.getItem("userRole");
+  const loggedIn: boolean = localStorage.getItem("userToken") !== null;
 
   return (
     <Box
@@ -32,36 +34,56 @@ export const Navbar = ({ searchShown }: { searchShown?: boolean }) => {
       >
         Home
       </Button>
-      <Button
-        variant="text"
-        sx={{ fontSize: "16px" }}
-        onClick={(e) => {
-          e.preventDefault();
-          handleNavigation("/login");
-        }}
-      >
-        Log In
-      </Button>
-      <Button
-        variant="text"
-        sx={{ fontSize: "16px" }}
-        onClick={(e) => {
-          e.preventDefault();
-          handleNavigation("/register");
-        }}
-      >
-        Sign Up
-      </Button>
-      <Button
-        variant="text"
-        sx={{ fontSize: "16px" }}
-        onClick={(e) => {
-          e.preventDefault();
-          handleNavigation("/admin_panel");
-        }}
-      >
-        Admin Panel
-      </Button>
+      {loggedIn ? null : (
+        <>
+          <Button
+            variant="text"
+            sx={{ fontSize: "16px" }}
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavigation("/login");
+            }}
+          >
+            Log In
+          </Button>
+          <Button
+            variant="text"
+            sx={{ fontSize: "16px" }}
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavigation("/register");
+            }}
+          >
+            Sign Up
+          </Button>
+        </>
+      )}
+      {userRole === "ADMIN" ? (
+        <Button
+          variant="text"
+          sx={{ fontSize: "16px" }}
+          onClick={(e) => {
+            e.preventDefault();
+            handleNavigation("/admin_panel");
+          }}
+        >
+          Admin Panel
+        </Button>
+      ) : null}
+      {loggedIn ? (
+        <Button
+          variant="text"
+          sx={{ fontSize: "16px" }}
+          onClick={(e) => {
+            e.preventDefault();
+            localStorage.removeItem("userToken");
+            localStorage.removeItem("userRole");
+            handleNavigation("/");
+          }}
+        >
+          Log out
+        </Button>
+      ) : null}
     </Box>
   );
 };

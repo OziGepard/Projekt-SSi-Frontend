@@ -20,8 +20,10 @@ export const LoginPanel = () => {
          }
       );
       if (response.status === 201 || response.status === 200) {
-        localStorage.setItem('userToken', response.data.message)
-        console.log(response.data.message)
+        localStorage.setItem('userToken', response.data.token)
+        localStorage.setItem('userRole', response.data.role)
+        console.log(response.data.token)
+        console.log(response.data.role)
         navigate('/')
       }
     } catch (error) {
