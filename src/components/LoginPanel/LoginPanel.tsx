@@ -1,15 +1,36 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const LoginPanel = () => {
   const [userCredentials, setUserCredentials] = useState({
     username: "",
     password: "",
   });
+  const navigate = useNavigate()
 
-  //TODO: submit to backend
+  const logIn = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4567/user/login",
+        {
+          username: userCredentials.username,
+          password: userCredentials.password,
+         }
+      );
+      if (response.status === 201 || response.status === 200) {
+        localStorage.setItem('userToken', response.data.message)
+        console.log(response.data.message)
+        navigate('/')
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const handleLogin = () => {
-    //sendRequest(userCredentials)
+    logIn();
   };
 
   return (

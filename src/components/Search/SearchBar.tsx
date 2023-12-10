@@ -3,15 +3,21 @@ import { Search } from "@mui/icons-material";
 import { useContext } from "react";
 import { AppContext } from "../../App";
 
-function SearchBar() {
-  const { filter, setFilter } = useContext(AppContext);
+function SearchBar({
+  placeholder = "Search videos...",
+  type,
+}: {
+  placeholder?: string;
+  type: "users" | "movies";
+}) {
+  const { userFilter, moviesFilter, setUserFilter, setMoviesFilter } = useContext(AppContext);
 
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter(e.target.value);
+    type === 'movies' ? setMoviesFilter(e.target.value) : setUserFilter(e.target.value);
   };
   return (
     <InputBase
-      placeholder="Search videos..."
+      placeholder={placeholder}
       sx={{
         backgroundColor: "white",
         borderRadius: "60px",
@@ -24,7 +30,7 @@ function SearchBar() {
           <Search color="primary" />
         </InputAdornment>
       }
-      value={filter}
+      value={type === 'users' ? userFilter : moviesFilter}
       onChange={handleValueChange}
     />
   );

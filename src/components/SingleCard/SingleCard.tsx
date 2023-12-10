@@ -14,14 +14,22 @@ export type SingleMovieProps = {
   rating: number;
 };
 
+export type InitialData =
+  {
+    title: string;
+    releaseDate: string;
+    rating: number;
+    genre: {
+      id: number;
+    },
+  }
+
 export const SingleCard = ({
   id,
-  title,
-  releaseDate,
-  genre,
-  rating,
+  title
 }: SingleMovieProps) => {
   const [liked, setLiked] = useState(false);
+  
   const handleLikeChange = () => {
     setLiked((prev) => !prev);
   };

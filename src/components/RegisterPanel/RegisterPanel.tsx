@@ -1,5 +1,7 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const RegisterPanel = () => {
   const [userCredentials, setUserCredentials] = useState({
@@ -8,10 +10,35 @@ export const RegisterPanel = () => {
     password: "",
     confirmPassword: "",
   });
+  const [errorResponse, setErrorResponse] = useState(null)
 
-  //TODO: submit to backend
-  const handleSignUp = () => {
-    //sendRequest(userCredentials)
+  const navigate = useNavigate()
+
+  const register = async () => {
+      const response = await axios.post(
+        "http://localhost:4567/user/register",
+        {
+          username: userCredentials.username,
+          password: userCredentials.password,
+          passwordRepeated: userCredentials.confirmPassword,
+         }
+      )
+      .then(response => {
+        if (response.status === 201) {
+          localStorage.setItem('userToken', response.data.message)
+          console.log(response.data.message)
+          navigate('/')
+        }
+      })
+      .catch(error => {
+        if (error.response.status === 400) {
+          setErrorResponse(error.response.data)
+        }
+      })
+  }
+
+  const handleRegister = () => {
+    register();
   };
 
   return (
@@ -57,7 +84,7 @@ export const RegisterPanel = () => {
             onChange={(e) =>
               setUserCredentials((prevValue) => ({
                 ...prevValue,
-                username: e.target.value,
+                email: e.target.value,
               }))
             }
           />
@@ -81,13 +108,13 @@ export const RegisterPanel = () => {
             onChange={(e) =>
               setUserCredentials((prevValue) => ({
                 ...prevValue,
-                password: e.target.value,
+                confirmPassword: e.target.value,
               }))
             }
           />
           <Button
             variant="contained"
-            onClick={handleSignUp}
+            onClick={handleRegister}
             sx={{ width: "75%" }}
           >
             {" "}
@@ -95,6 +122,7 @@ export const RegisterPanel = () => {
           </Button>
           <Typography>Already have an account?</Typography>
           <a href="/login">Sign In</a>
+          {errorResponse && <Typography>{errorResponse}</Typography>}
         </Stack>
       </Box>
     </Box>
